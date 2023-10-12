@@ -23,6 +23,7 @@ all_examples = [
         'ip_reassembly',
         'ipsec-secgw',
         'ipv4_multicast',
+        'kbridge',
         'l2fwd',
         'l2fwd-cat',
         'l2fwd-crypto',
