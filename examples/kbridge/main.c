@@ -38,7 +38,9 @@
 #include <rte_mbuf.h>
 #include <rte_string_fns.h>
 
-static volatile bool force_quit;
+//#include "common.h"
+#include "fastpath.h"
+bool force_quit;
 
 /* MAC updating enabled by default */
 static int mac_updating = 1;
@@ -80,13 +82,6 @@ static uint16_t nb_port_pair_params;
 
 static unsigned int l2fwd_rx_queue_per_lcore = 1;
 
-#define MAX_RX_QUEUE_PER_LCORE 16
-#define MAX_TX_QUEUE_PER_PORT 16
-/* List of queues to be polled for a given lcore. 8< */
-struct lcore_queue_conf {
-	unsigned n_rx_port;
-	unsigned rx_port_list[MAX_RX_QUEUE_PER_LCORE];
-} __rte_cache_aligned;
 struct lcore_queue_conf lcore_queue_conf[RTE_MAX_LCORE];
 /* >8 End of list of queues to be polled for a given lcore. */
 
@@ -112,6 +107,7 @@ struct l2fwd_port_statistics port_statistics[RTE_MAX_ETHPORTS];
 /* A tsc-based timer responsible for triggering statistics printout */
 static uint64_t timer_period = 10; /* default period is 10 seconds */
 
+#if 0
 /* Print out statistics on packets dropped */
 static void
 print_stats(void)
@@ -214,7 +210,7 @@ l2fwd_main_loop(void)
 	prev_tsc = 0;
 	timer_tsc = 0;
 
-	lcore_id = rte_lcore_id();
+	lcore_id = rte_lco1re_id();
 	qconf = &lcore_queue_conf[lcore_id];
 
 	if (qconf->n_rx_port == 0) {
@@ -297,11 +293,16 @@ l2fwd_main_loop(void)
 		/* >8 End of read packet from RX queues. */
 	}
 }
+#endif
 
 static int
 l2fwd_launch_one_lcore(__rte_unused void *dummy)
 {
-	l2fwd_main_loop();
+    kbridge_lcore_args lcore_args;
+
+	//l2fwd_main_loop();
+    lcore_args.qconf = lcore_queue_conf;
+    kbridge_lcore_loop(&lcore_args);
 	return 0;
 }
 

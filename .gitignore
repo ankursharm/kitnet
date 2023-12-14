@@ -27,6 +27,8 @@ cscope.out.po
 cscope.out.in
 cscope.out
 cscope.files
+cscope.in.out
+cscope.po.out
 GTAGS
 GPATH
 GRTAGS
